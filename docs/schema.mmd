@@ -1,0 +1,53 @@
+erDiagram
+    users ||--o{ refresh_tokens : "has"
+    users }|--|{ user_roles : "assigned"
+    roles }|--|{ user_roles : "assigned"
+    users }|--|{ user_permissions : "granted"
+    permissions }|--|{ user_permissions : "granted"
+    roles }|--|{ role_permissions : "includes"
+    permissions }|--|{ role_permissions : "includes"
+
+    users {
+        bigint user_id PK
+        varchar first_name
+        varchar last_name
+        varchar email UK
+        varchar phone_number
+        varchar password_hash
+    }
+
+    roles {
+        integer role_id PK
+        varchar role_name UK
+    }
+
+    permissions {
+        integer permission_id PK
+        varchar permission_name UK
+    }
+
+    refresh_tokens {
+        uuid id PK
+        bigint user_id FK
+        varchar token UK
+        timestamp expiry_date
+        varchar device_info
+        varchar ip_address
+        timestamp created_at
+    }
+
+    %% Junction Tables (Implicit in JPA, explicit in DB)
+    user_roles {
+        bigint user_id PK, FK
+        integer role_id PK, FK
+    }
+
+    user_permissions {
+        bigint user_id PK, FK
+        integer permission_id PK, FK
+    }
+
+    role_permissions {
+        integer role_id PK, FK
+        integer permission_id PK, FK
+    }

@@ -1,0 +1,44 @@
+### Register User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "{{userFirstName}}",
+  "lastName": "{{userLastName}}",
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}",
+  "phoneNumber": "{{userPhone}}"
+}
+
+### Login User
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+User-Agent: IntelliJ HTTP Client
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+> {%
+    client.global.set("accessToken", response.body.data.jwt.token);
+    client.global.set("refreshToken", response.body.data.refreshToken);
+    client.log("Token captured: " + response.body.data.jwt.token);
+%}
+
+### Refresh Token
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Test Greeting Endpoint (Authorized)
+GET {{baseUrl}}/Tushar
+Authorization: Bearer {{accessToken}}
+
+### Logout User
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
